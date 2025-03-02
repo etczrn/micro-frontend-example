@@ -33,13 +33,45 @@ from [Micro-Frontend Architecture: Setup & Key Concepts Explained](https://youtu
 
 - Next js 14 (App router)
 - React 18
+- Styled components
+
+```bash
+npx create-next-app@14.2.24 host-a --ts --eslint --app --use-npm
+
+Need to install the following packages:
+create-next-app@14.2.24
+Ok to proceed? (y) y
+✔ Would you like to use Tailwind CSS? … **No** / Yes
+✔ Would you like to use `src/` directory? … **No** / Yes
+✔ Would you like to customize the default import alias (@/*)? … **No** / Yes
+```
 
 ### Host B
 
 - React 18
 - Vite 4
 
-### Module (for Host A, B)
+```bash
+npm create vite@4 host-b -- --template react-ts
+
+npm install
+
+npm run dev # localhost:5173
+```
+
+### Shared (for Host A, B)
 
 - Next 15 (App router)
 - React 19
+
+```bash
+npx create-next-app@latest shared
+
+✔ Would you like to use TypeScript? … No / **Yes**
+✔ Would you like to use ESLint? … No / **Yes**
+✔ Would you like to use Tailwind CSS? … **No** / Yes
+✔ Would you like your code inside a `src/` directory? … **No** / Yes
+✔ Would you like to use App Router? (recommended) … No / **Yes**
+✔ Would you like to use Turbopack for `next dev`? … No / **Yes**
+✔ Would you like to customize the import alias (`@/*` by default)? … **No** / Yes
+```
