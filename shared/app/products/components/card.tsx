@@ -7,7 +7,7 @@ import { Product } from '@prisma/client';
 import { ProductFormData } from '@/app/types/product';
 import { ServerActionResponse } from '@/app/types/response';
 
-export function Card({ id, name, description, price }: Product) {
+export function Card({ id, name, description, price }: Readonly<Product>) {
   const [isEditing, setIsEditing] = useState(false);
 
   return (
@@ -134,7 +134,7 @@ function UpdateForm({
   );
 }
 
-function DeleteForm({ id }: Pick<Product, 'id'>) {
+function DeleteForm({ id }: Readonly<Pick<Product, 'id'>>) {
   const [, action, isPending] = useActionState(deleteProduct, initialState);
 
   return (
