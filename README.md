@@ -31,7 +31,7 @@ from [Micro-Frontend Architecture: Setup & Key Concepts Explained](https://youtu
 
 ### Host A
 
-- Next js 14
+- Next js 14 (App router)
 - React 18
 
 ### Host B
@@ -41,5 +41,5 @@ from [Micro-Frontend Architecture: Setup & Key Concepts Explained](https://youtu
 
 ### Module (for Host A, B)
 
-- Next 15
+- Next 15 (App router)
 - React 19
