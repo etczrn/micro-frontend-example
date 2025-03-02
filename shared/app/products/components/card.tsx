@@ -7,7 +7,12 @@ import { Product } from '@prisma/client';
 import { ProductFormData } from '@/app/types/product';
 import { ServerActionResponse } from '@/app/types/response';
 
-export function Card({ id, name, description, price }: Readonly<Product>) {
+export function Card({
+  id,
+  name,
+  description,
+  price,
+}: Readonly<Pick<Product, 'id' | 'name' | 'description' | 'price'>>) {
   const [isEditing, setIsEditing] = useState(false);
 
   return (
@@ -56,7 +61,7 @@ function UpdateForm({
   price,
   onCancel,
   onSubmit,
-}: Product & {
+}: Pick<Product, 'id' | 'name' | 'description' | 'price'> & {
   onCancel: () => void;
   onSubmit?: () => void;
 }) {

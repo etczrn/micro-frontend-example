@@ -2,7 +2,11 @@ import { Product } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
 export function getProducts() {
-  return prisma.product.findMany();
+  return prisma.product.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
 }
 
 export function createProduct(product: Omit<Product, 'id'>) {

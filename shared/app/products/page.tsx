@@ -1,12 +1,12 @@
 import { AddForm } from './components/add-form';
 import { Card } from './components/card';
-import { prisma } from '@/lib/prisma';
+import { getProducts } from '@/lib/repositories/product';
 
 export default async function Page() {
-  const products = await prisma.product.findMany();
+  const products = await getProducts();
 
   return (
-    <main className="grid max-w-5xl grid-cols-2 p-8 mx-auto gap-x-4">
+    <main className="grid max-w-5xl grid-cols-1 p-8 mx-auto gap-x-4 md:grid-cols-2">
       <section>
         <h1 className="mb-8 text-3xl font-bold">Product list</h1>
         <ul>
