@@ -38,6 +38,7 @@ export function AddForm() {
           id="description"
           name="description"
           className="w-full p-2 border border-gray-300 rounded"
+          required
         />
         {state.errors?.description && (
           <p className="text-red-500">{state.errors.description[0]}</p>

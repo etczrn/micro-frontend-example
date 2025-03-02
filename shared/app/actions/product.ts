@@ -44,3 +44,57 @@ export async function createProduct(
     return handleError(e);
   }
 }
+
+export async function updateProduct(
+  prev: ServerActionResponse<ProductFormData> | null,
+  formData: FormData
+) {
+  const rawData: ProductFormData = {
+    name: formData.get('name') as string,
+    description: formData.get('description') as string,
+    price: Number(formData.get('price')),
+  };
+  const validatedData = productSchema.safeParse(rawData);
+
+  if (!validatedData.success) {
+    return handleError(validatedData.error);
+  }
+
+  try {
+    await prisma.product.update({
+      where: {
+        id: Number(formData.get('id')),
+      },
+      data: validatedData.data,
+    });
+    revalidatePath('/');
+
+    return {
+      success: true,
+      message: 'Product updated successfully',
+    };
+  } catch (e) {
+    return handleError(e);
+  }
+}
+
+export async function deleteProduct(
+  prev: ServerActionResponse<ProductFormData> | null,
+  formData: FormData
+) {
+  try {
+    await prisma.product.delete({
+      where: {
+        id: Number(formData.get('id')),
+      },
+    });
+    revalidatePath('/');
+
+    return {
+      success: true,
+      message: 'Product deleted successfully',
+    };
+  } catch (e) {
+    return handleError(e);
+  }
+}
