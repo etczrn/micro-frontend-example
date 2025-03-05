@@ -5,7 +5,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/products',
+        source: '/foo',
         destination: `${SHARED_URL}/products`,
       },
       {

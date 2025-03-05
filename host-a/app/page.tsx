@@ -8,7 +8,7 @@ export default function Home() {
       <nav>
         <ul>
           <li>
-            <Link href={'/products'}>products (from shared)</Link>
+            <Link href={'/foo'}>products (from shared)</Link>
           </li>
         </ul>
       </nav>
