@@ -1,0 +1,155 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Survey {
+  id          Int          @id @default(autoincrement())
+  title       String       @db.VarChar(255)
+  description String?      @db.VarChar(255)
+  startsAt    DateTime?    @map("starts_at")
+  expiresAt   DateTime?    @map("expires_at")
+  status      SurveyStatus @default(DRAFT)
+  /// serviceType: 서비스유형_sequence (union_174)
+  serviceType String       @map("service_type") @db.VarChar(255)
+  code        String       @unique @db.VarChar(255)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  draft       DraftSurvey?
+  questions   Question[]
+  respondents Respondent[]
+
+  @@index([serviceType])
+  @@index([code])
+  @@map("survey")
+}
+
+model DraftSurvey {
+  id       Int    @id @default(autoincrement())
+  surveyId Int    @unique @map("survey_id")
+  survey   Survey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+
+  @@map("draft_survey")
+}
+
+model Question {
+  id          Int          @id @default(autoincrement())
+  surveyId    Int          @map("survey_id")
+  survey      Survey       @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  title       String       @db.VarChar(255)
+  description String?      @db.Text
+  fileSeqs    Json?        @map("file_seqs")
+  type        QuestionType @map("type")
+  isRequired  Boolean      @map("is_required")
+  order       Int
+
+  scaleOptions  ScaleOption[]
+  choiceOptions ChoiceOption[]
+  textAnswers   TextAnswer[]
+  scaleAnswers  ScaleAnswer[]
+  choiceAnswers ChoiceAnswer[]
+
+  @@index([surveyId])
+  @@map("question")
+}
+
+model ScaleOption {
+  id         Int      @id @default(autoincrement())
+  questionId Int      @map("question_id")
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  /// 척도 점수 (1~5점)
+  scaleValue Int      @map("scale_value")
+  label      String?  @db.VarChar(255)
+
+  @@map("scale_option")
+}
+
+model ChoiceOption {
+  id         Int      @id @default(autoincrement())
+  questionId Int      @map("question_id")
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  label      String   @db.VarChar(255)
+  fileSeqs   Json?    @map("file_seqs")
+
+  choiceAnswers ChoiceAnswer[]
+
+  @@map("choice_option")
+}
+
+model Respondent {
+  id          Int      @id @default(autoincrement())
+  surveyId    Int      @map("survey_id")
+  survey      Survey   @relation(fields: [surveyId], references: [id], onDelete: Restrict)
+  name        String   @db.VarChar(255)
+  phoneNumber String   @map("phone_number") @db.VarChar(255)
+  birthDate   String   @map("birth_date") @db.VarChar(255)
+  submittedAt DateTime @default(now()) @map("submitted_at")
+
+  textAnswers   TextAnswer[]
+  scaleAnswers  ScaleAnswer[]
+  choiceAnswers ChoiceAnswer[]
+
+  @@unique([surveyId, phoneNumber, birthDate])
+  @@index([surveyId, phoneNumber, birthDate])
+  @@index([surveyId])
+  @@map("respondent")
+}
+
+model TextAnswer {
+  id           Int        @id @default(autoincrement())
+  respondentId Int        @map("respondent_id")
+  respondent   Respondent @relation(fields: [respondentId], references: [id], onDelete: Cascade)
+  questionId   Int        @map("question_id")
+  question     Question   @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  answer       String     @db.Text
+
+  @@map("text_answer")
+}
+
+model ScaleAnswer {
+  id           Int        @id @default(autoincrement())
+  respondentId Int        @map("respondent_id")
+  respondent   Respondent @relation(fields: [respondentId], references: [id], onDelete: Cascade)
+  questionId   Int        @map("question_id")
+  question     Question   @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  scale        Int        @map("answer")
+
+  @@map("scale_answer")
+}
+
+model ChoiceAnswer {
+  id           Int          @id @default(autoincrement())
+  respondentId Int          @map("respondent_id")
+  respondent   Respondent   @relation(fields: [respondentId], references: [id], onDelete: Cascade)
+  questionId   Int          @map("question_id")
+  question     Question     @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  optionId     Int          @map("option_id")
+  option       ChoiceOption @relation(fields: [optionId], references: [id], onDelete: Restrict)
+
+  @@unique([respondentId, questionId, optionId])
+  @@map("choice_answer")
+}
+
+enum SurveyStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+enum QuestionType {
+  SINGLE
+  MULTIPLE
+  TEXT
+  SCALE
+}
