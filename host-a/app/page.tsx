@@ -9,6 +9,7 @@ export default function Home() {
         <ul>
           <li>
             <Link href={'/foo'}>products (from shared)</Link>
+            <Link href={'/surveys'}>surveys (for testing)</Link>
           </li>
         </ul>
       </nav>
