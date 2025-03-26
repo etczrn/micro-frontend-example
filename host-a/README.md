@@ -49,3 +49,5 @@
 - DB 로직을 서비스/레포지토리 레이어로 분리
   - 예: `getSurveys` 함수를 `/repositories/survey` 로 이동
   - 현재는 예제라 단순하게 페이지 내에서 처리
+- 서버 액션에서 formData 유효성 검사 추가
+  - 유효성 검사 추가한 예제는 [`/shared/app/actions/product.ts`](../shared/app/actions/product.ts) 에 있음
